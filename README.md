@@ -1,5 +1,5 @@
 # CL-VendingMachines
-Advanced QBCore vending machine system
+Advanced QBCore Rust inspired vending machine system
 
 Preview video : https://www.youtube.com/watch?v=4r5WMp1WiBY
 
