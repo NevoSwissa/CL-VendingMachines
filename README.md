@@ -3,6 +3,8 @@ Advanced QBCore vending machine system
 
 Preview video : https://www.youtube.com/watch?v=4r5WMp1WiBY
 
+Discord : https://discord.gg/rp6ynCJTKK
+
 Installation :
 
 1- Run the SQL file - CL-SellMachines.sql
