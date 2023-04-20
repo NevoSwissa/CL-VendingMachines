@@ -18,43 +18,42 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     QBCore.Functions.TriggerCallback('CL-SellMachines:GetData', function(result)
         if result then
             for i, location in ipairs(result) do
-                local checkobject = GetClosestObjectOfType(location.x, location.y, location.z, 3.0, GetHashKey(Config.VendingMachineObject), false, false, false)
-                if DoesEntityExist(checkobject) then
-                    TriggerEvent("CL-SellMachines:RemoveTargetObject", location, location.name)
-                end
-                local object = CreateObject(Config.VendingMachineObject, location.x, location.y, location.z, true, true, true)
-                while not DoesEntityExist(object) do
-                    Wait(0)
-                end
-                if DoesEntityExist(object) then
-                    SetEntityAsMissionEntity(object, true, true)
-                    PlaceObjectOnGroundProperly(object)
-                    FreezeEntityPosition(object, true)
-                    SetEntityInvincible(object, true)
-                    exports[Config.Target]:AddTargetModel(Config.VendingMachineObject, {
-                        name = "SellMachines",
-                        options = {
-                            {
-                                icon = "fa fa-store",
-                                label = "Vending Machine",
-                                action = function()
-                                    QBCore.Functions.TriggerCallback('CL-SellMachines:GetData', function(result)
-                                        if result then
-                                            if not Config.ConnectedOwners[result.citizenid] then
-                                                TriggerServerEvent("CL-SellMachines:AddData", "owners", false, false, false, false, result.citizenid, result.playersource)
+                local object = GetClosestObjectOfType(location.x, location.y, location.z, 3.0, GetHashKey(Config.VendingMachineObject), false, false, false)
+                if not DoesEntityExist(object) then
+                    object = CreateObject(Config.VendingMachineObject, location.x, location.y, location.z, true, true, true)
+                    while not DoesEntityExist(object) do
+                        Wait(0)
+                    end
+                    if DoesEntityExist(object) then
+                        SetEntityAsMissionEntity(object, true, true)
+                        PlaceObjectOnGroundProperly(object)
+                        FreezeEntityPosition(object, true)
+                        SetEntityInvincible(object, true)
+                        exports[Config.Target]:AddTargetEntity(object, {
+                            name = "SellMachines",
+                            options = {
+                                {
+                                    icon = "fa fa-store",
+                                    label = "Vending Machine",
+                                    action = function()
+                                        QBCore.Functions.TriggerCallback('CL-SellMachines:GetData', function(result)
+                                            if result then
+                                                if not Config.ConnectedOwners[result.citizenid] then
+                                                    TriggerServerEvent("CL-SellMachines:AddData", "owners", false, false, false, false, result.citizenid, result.playersource)
+                                                end
+                                                TriggerEvent("CL-SellMachine:OpenSellerMachineMenu", result.player, location, result.money)
+                                            else
+                                                TriggerServerEvent("CL-SellMachines:Buyer", location)
                                             end
-                                            TriggerEvent("CL-SellMachine:OpenSellerMachineMenu", result.player, location, result.money)
-                                        else
-                                            TriggerServerEvent("CL-SellMachines:Buyer", location)
-                                        end
-                                    end, "get", location)     
-                                end,
+                                        end, "get", location)     
+                                    end,
+                                },
                             },
-                        },
-                        distance = 2.0,
-                    })
-                    if location.name then
-                        TriggerEvent("CL-SellMachine:CreateBlip", location, location.name)
+                            distance = 2.0,
+                        })
+                        if location.name then
+                            TriggerEvent("CL-SellMachine:CreateBlip", location, location.name)
+                        end
                     end
                 end
             end
@@ -77,7 +76,7 @@ RegisterNetEvent("onResourceStart", function(resource)
                         PlaceObjectOnGroundProperly(object)
                         FreezeEntityPosition(object, true)
                         SetEntityInvincible(object, true)
-                        exports[Config.Target]:AddTargetModel(Config.VendingMachineObject, {
+                        exports[Config.Target]:AddTargetEntity(object, {
                             name = "SellMachines",
                             options = {
                                 {
@@ -179,7 +178,7 @@ RegisterNetEvent('CL-SellMachines:Place', function()
                         FreezeEntityPosition(object, true)
                         SetEntityAlpha(object, 255, true) 
                         TriggerServerEvent("CL-SellMachines:AddData", "newmachine", newObjectCoords)
-                        exports[Config.Target]:AddTargetModel(Config.VendingMachineObject, {
+                        exports[Config.Target]:AddTargetEntity(object, {
                             name = "SellMachines",
                             options = {
                                 {
